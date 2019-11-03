@@ -1,0 +1,14 @@
+{
+  "name": "neon-shooter-js",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "parcel-bundler": "^1.12.4",
+    "phaser": "3.20.1",
+    "typescript": "^3.6.4"
+  },
+  "scripts": {
+    "start": "parcel src/index.html --out-dir app/ -p 6868 "
+  }
+}
