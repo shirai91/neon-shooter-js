@@ -1,19 +1,16 @@
-import "phaser";
-import { BootScene, MenuScene } from "./scenes";
+import GameEngine from "./core/GameEngine";
 
-const gameConfig: Phaser.Types.Core.GameConfig = {
-  type: Phaser.AUTO,
-  width: 800,
-  height: 600,
-  scene: [BootScene, MenuScene]
-};
+function initGameEngine() {
+  const rootNode = document.getElementById("container");
 
-export class Game extends Phaser.Game {
-  constructor(config: Phaser.Types.Core.GameConfig) {
-    super(config);
+  if (!rootNode) {
+    document.body.append("<span>Root node not found</span>");
   }
+
+  const gameEngine = new GameEngine(rootNode!);
+
+  gameEngine.registerScenes(["TestCubeScene"]);
+  gameEngine.startEngine();
 }
 
-window.addEventListener("load", () => {
-  var game = new Game(gameConfig);
-});
+initGameEngine();
