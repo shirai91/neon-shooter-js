@@ -1,9 +1,10 @@
 import * as THREE from "three";
 
 import SceneConfig from "../scenes/SceneConfig";
-import GameScene from "../scenes/GameScene";
+import GameScene from "./ScriptableScene";
 import SceneFactory from "../scenes/SceneFactory";
 
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import Stats from "three/examples/jsm/libs/stats.module.js";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
@@ -25,13 +26,14 @@ export default class GameEngine {
   camera: THREE.PerspectiveCamera;
   composer: EffectComposer;
   bloomPass: UnrealBloomPass;
-  scenes: { [name: string]: GameScene } = {};
+  gameScenes: { [name: string]: GameScene } = {};
+  activeGameSceneName: string = null;
 
   constructor(domElement: HTMLElement) {
     this.clock = new THREE.Clock();
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(75, 800 / 600, 0.1, 1000);
-    this.camera.position.set(0, 0, 3.5);
+    this.camera.position.set(0, 0, 20);
 
     this.stats = new Stats();
     domElement.appendChild(this.stats.dom);
@@ -41,6 +43,8 @@ export default class GameEngine {
     this.initComposer(domElement);
 
     this.initGui();
+
+    var controls = new OrbitControls(this.camera, this.renderer.domElement);
 
     window.onresize = () => {
       const boundingRect = domElement.getBoundingClientRect();
@@ -107,16 +111,16 @@ export default class GameEngine {
     }
 
     const sceneFactory = new SceneFactory();
-    let entryScene = "";
+
     scenes.forEach((sceneName, idx) => {
       if (idx === 0) {
-        entryScene = sceneName;
+        this.activeGameSceneName = sceneName;
       }
       const gameScene = sceneFactory.createScene(sceneName);
-      this.scenes[sceneName] = gameScene;
+      this.gameScenes[sceneName] = gameScene;
     });
 
-    this.loadSceneData(this.scenes[entryScene]);
+    this.loadSceneData(this.gameScenes[this.activeGameSceneName]);
   }
 
   loadSceneData(scene: GameScene) {
@@ -124,10 +128,19 @@ export default class GameEngine {
   }
 
   update() {
+    this.renderer.setClearColor(0x000000, 1);
     requestAnimationFrame(() => {
       this.update();
     });
+
+    // delta is time between 2 frames
     const delta = this.clock.getDelta();
+    const activeScene = this.gameScenes[this.activeGameSceneName];
+    if (activeScene) {
+      activeScene.update(this.scene, this.camera, delta);
+    }
+
+    // This is for debug UI
     this.stats.update();
     this.composer.render();
   }
