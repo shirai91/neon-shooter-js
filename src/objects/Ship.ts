@@ -73,7 +73,7 @@ export default class Ship extends GameObject {
 
   update(scene: THREE.Scene) {
     if (this.mesh) {
-      // this.mesh.position.add(new THREE.Vector3(this.speed.x, this.speed.y, 0));
+      this.mesh.position.add(new THREE.Vector3(this.speed.x, this.speed.y, 0));
       this.mesh.rotation.set(0, 0, this.direction.angle());
     }
   }
