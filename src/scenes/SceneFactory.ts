@@ -1,10 +1,10 @@
 import * as THREE from "three";
 import SceneConfig from "./SceneConfig";
-import GameScene from "./GameScene";
+import ScriptableScene from "~core/ScriptableScene";
 import TestCubeScene from "./TestCubeScene";
 
 export default class SceneFactory {
-  createScene(sceneName: string): GameScene {
+  createScene(sceneName: string): ScriptableScene {
     switch (sceneName) {
       case "TestCubeScene":
         return new TestCubeScene();

@@ -1,6 +1,6 @@
 import * as THREE from "three";
 
-export default interface SceneConfig {
+export default class SceneConfig {
   name: string;
   scene: THREE.Scene;
 }
