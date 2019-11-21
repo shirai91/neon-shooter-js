@@ -1,6 +1,8 @@
-import GameObject from "~core/GameObject";
 import * as THREE from "three";
-import ScriptableScene from "~core/ScriptableScene";
+import { GameObject } from "~core/GameObject";
+import { GameManager } from "~core/GameManager";
+import { ASSETS } from "~assetList";
+import { ContentManager } from "~core/ContentManager";
 
 const CONTROL_KEYS = {
   UP: 38,
@@ -13,8 +15,10 @@ const SHIP_SPEED = 2;
 const ROTATION_VALUE = Math.PI / 2;
 
 export default class Ship extends GameObject {
-  init(scene: ScriptableScene) {
+  init() {
+    const scene = GameManager.getInstance().getScene();
     this.loadTexture(scene);
+
     window.addEventListener("keydown", this.onDocumentKeyDown);
     window.addEventListener("keyup", this.onDocumentKeyUp);
   }
@@ -57,28 +61,18 @@ export default class Ship extends GameObject {
     }
   };
 
-  loadTexture(scene) {
-    this.loader.load("assets/Player.png", texture => {
-      this.material = new THREE.MeshBasicMaterial({
-        map: texture
-      });
-      this.geometry = new THREE.PlaneGeometry(10, 10, 0);
-      this.mesh = new THREE.Mesh(this.geometry, this.material);
-      this.position = new THREE.Vector3(0, 0, 0);
-      this.mesh.position.set(this.position.x, this.position.y, this.position.z);
-
-      scene.scene.add(this.mesh);
-    });
+  loadTexture(scene: THREE.Scene) {
+    this.setScale(10, 10);
+    const shipTexture = ContentManager.getInstance().getAsset(ASSETS.SHIP.name);
+    this.setImage(shipTexture);
   }
 
-  update(scene: THREE.Scene, delta: number) {
+  update(delta: number) {
     this.position.add(new THREE.Vector3(this.speed.x, this.speed.y, 0));
   }
 
-  draw(scene: THREE.Scene, delta: number) {
-    if (this.mesh) {
-      this.mesh.position.set(this.position.x, this.position.y, this.position.z);
-      this.mesh.rotation.set(0, 0, this.direction.angle());
-    }
+  draw() {
+    this.mesh.position.set(this.position.x, this.position.y, this.position.z);
+    this.mesh.rotation.set(0, 0, this.direction.angle());
   }
 }

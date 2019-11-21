@@ -1,21 +1,16 @@
 import * as THREE from "three";
-import ScriptableScene from "~core/ScriptableScene";
 import Ship from "~objects/Ship";
-import GameObject from "~core/GameObject";
+import { GameObject } from "~core/GameObject";
+import { GameManager } from "~core/GameManager";
 
-export default class TestCubeScene extends ScriptableScene {
+export class TestCubeScene extends GameObject {
   name = "testCube";
   entities: GameObject[] = [];
 
-  constructor() {
-    super();
-  }
-
-  init(scene: THREE.Scene, camera: THREE.PerspectiveCamera) {
-    super.init(scene, camera);
-    while (scene.children.length > 0) {
-      scene.remove(scene.children[0]);
-    }
+  init() {
+    const scene = GameManager.getInstance().getScene();
+    const camera = GameManager.getInstance().getCamera();
+    GameManager.getInstance().clearScene();
 
     camera.lookAt(new THREE.Vector3(0, 0, 0));
 
@@ -23,14 +18,14 @@ export default class TestCubeScene extends ScriptableScene {
     this.entities.push(ship);
 
     this.entities.forEach(entity => {
-      entity.init(this);
+      entity.init();
     });
   }
 
-  update(scene: THREE.Scene, camera: THREE.PerspectiveCamera, delta: number) {
+  update(delta: number) {
     this.entities.forEach(entity => {
-      entity.update(scene, delta);
-      entity.draw(scene, delta);
+      entity.update(delta);
+      entity.draw();
     });
   }
 }

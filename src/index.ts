@@ -1,15 +1,24 @@
-import GameEngine from "./core/GameEngine";
+import { GameEngine } from "./core/GameEngine";
+import { ContentManager } from "./core/ContentManager";
+import { ASSETS } from "./assetList";
+import { TestCubeScene } from "./scenes/TestCubeScene";
 
-function initGameEngine() {
+async function initGameEngine() {
   const rootNode = document.getElementById("container");
 
   if (!rootNode) {
     document.body.append("<span>Root node not found</span>");
   }
+  // TODO: next time we need to move content loader to another class
+  await ContentManager.getInstance().loadContent(
+    ASSETS.SHIP.name,
+    ASSETS.SHIP.path
+  );
 
   const gameEngine = new GameEngine(rootNode!);
+  const testScene = new TestCubeScene();
 
-  gameEngine.registerScenes(["TestCubeScene"]);
+  gameEngine.setEntry(testScene);
   gameEngine.startEngine();
 }
 
