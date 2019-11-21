@@ -3,6 +3,8 @@ import { GameObject } from "~core/GameObject";
 import { GameManager } from "~core/GameManager";
 import { ASSETS } from "~assetList";
 import { ContentManager } from "~core/ContentManager";
+import { InputManager } from "~core/InputManager";
+import { Vector2, Vector3 } from "three";
 
 const CONTROL_KEYS = {
   UP: 38,
@@ -24,41 +26,13 @@ export default class Ship extends GameObject {
   }
 
   onDocumentKeyDown = (event: KeyboardEvent) => {
-    if (!this.mesh) return;
-
     var keyCode = event.keyCode;
-    if (keyCode === CONTROL_KEYS.UP) {
-      this.speed.y = SHIP_SPEED;
-      this.direction.y = 1;
-    } else if (keyCode == CONTROL_KEYS.DOWN) {
-      this.speed.y = -SHIP_SPEED;
-      this.direction.y = -1;
-    } else if (keyCode == CONTROL_KEYS.LEFT) {
-      this.speed.x = -SHIP_SPEED;
-      this.direction.x = -1;
-    } else if (keyCode == CONTROL_KEYS.RIGHT) {
-      this.speed.x = SHIP_SPEED;
-      this.direction.x = 1;
-    }
+    InputManager.getInstance().updateKeyState(keyCode, true);
   };
 
   onDocumentKeyUp = (event: KeyboardEvent) => {
-    if (!this.mesh) return;
-
     var keyCode = event.keyCode;
-    if (keyCode === CONTROL_KEYS.UP) {
-      this.speed.y = 0;
-      this.direction.y = 0;
-    } else if (keyCode == CONTROL_KEYS.DOWN) {
-      this.speed.y = 0;
-      this.direction.y = 0;
-    } else if (keyCode == CONTROL_KEYS.LEFT) {
-      this.speed.x = 0;
-      this.direction.x = 0;
-    } else if (keyCode == CONTROL_KEYS.RIGHT) {
-      this.speed.x = 0;
-      this.direction.x = 0;
-    }
+    InputManager.getInstance().updateKeyState(keyCode, false);
   };
 
   loadTexture(scene: THREE.Scene) {
@@ -67,12 +41,39 @@ export default class Ship extends GameObject {
     this.setImage(shipTexture);
   }
 
+  getMovementDirection() {
+    const Input = InputManager.getInstance();
+
+    const direction = new Vector2();
+
+    if (Input.isKeyDown(CONTROL_KEYS.UP)) {
+      direction.y += 1;
+    }
+    if (Input.isKeyDown(CONTROL_KEYS.DOWN)) {
+      direction.y -= 1;
+    }
+    if (Input.isKeyDown(CONTROL_KEYS.LEFT)) {
+      direction.x -= 1;
+    }
+    if (Input.isKeyDown(CONTROL_KEYS.RIGHT)) {
+      direction.x += 1;
+    }
+    if (direction.lengthSq() > 1) {
+      direction.normalize();
+    }
+    return direction;
+  }
+
   update(delta: number) {
-    this.position.add(new THREE.Vector3(this.speed.x, this.speed.y, 0));
+    this.velocity = this.getMovementDirection().multiplyScalar(SHIP_SPEED);
+    if (this.velocity.lengthSq() > 0) {
+      this.orientation = this.velocity.angle();
+    }
+    this.position.add(new Vector3(this.velocity.x, this.velocity.y, 0));
   }
 
   draw() {
     this.mesh.position.set(this.position.x, this.position.y, this.position.z);
-    this.mesh.rotation.set(0, 0, this.direction.angle());
+    this.mesh.rotation.set(0, 0, this.orientation);
   }
 }

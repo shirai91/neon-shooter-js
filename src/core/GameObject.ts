@@ -16,13 +16,12 @@ export abstract class GameObject {
   name: String = null;
   position = new Vector3();
   direction = new Vector2(0, 0);
-  velocity: number = 0;
+  velocity = new Vector2(0, 0);
   acceleration: number = 0;
-  radius: number = 0;
-  orientation: number;
+  radius: number = 10;
+  orientation: number = 0;
   isExpired: boolean = false;
   loader = new TextureLoader();
-  speed = new Vector2(0, 0);
 
   constructor() {
     const scene = GameManager.getInstance().getScene();
