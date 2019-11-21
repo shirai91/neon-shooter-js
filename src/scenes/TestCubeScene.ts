@@ -29,7 +29,8 @@ export default class TestCubeScene extends ScriptableScene {
 
   update(scene: THREE.Scene, camera: THREE.PerspectiveCamera, delta: number) {
     this.entities.forEach(entity => {
-      entity.update(scene);
+      entity.update(scene, delta);
+      entity.draw(scene, delta);
     });
   }
 }
