@@ -9,7 +9,7 @@ const CONTROL_KEYS = {
   RIGHT: 39
 };
 
-const SHIP_SPEED = 0.5;
+const SHIP_SPEED = 2;
 const ROTATION_VALUE = Math.PI / 2;
 
 export default class Ship extends GameObject {
@@ -62,7 +62,7 @@ export default class Ship extends GameObject {
       this.material = new THREE.MeshBasicMaterial({
         map: texture
       });
-      this.geometry = new THREE.PlaneGeometry(1, 1, 0);
+      this.geometry = new THREE.PlaneGeometry(10, 10, 0);
       this.mesh = new THREE.Mesh(this.geometry, this.material);
       this.position = new THREE.Vector3(0, 0, 0);
       this.mesh.position.set(this.position.x, this.position.y, this.position.z);
@@ -71,9 +71,13 @@ export default class Ship extends GameObject {
     });
   }
 
-  update(scene: THREE.Scene) {
+  update(scene: THREE.Scene, delta: number) {
+    this.position.add(new THREE.Vector3(this.speed.x, this.speed.y, 0));
+  }
+
+  draw(scene: THREE.Scene, delta: number) {
     if (this.mesh) {
-      this.mesh.position.add(new THREE.Vector3(this.speed.x, this.speed.y, 0));
+      this.mesh.position.set(this.position.x, this.position.y, this.position.z);
       this.mesh.rotation.set(0, 0, this.direction.angle());
     }
   }

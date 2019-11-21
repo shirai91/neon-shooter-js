@@ -8,16 +8,19 @@ export default class GameObject {
   mesh: THREE.Mesh;
   uniqueName = uuid(15);
   name: String = null;
-  position: THREE.Vector3;
+  position = new THREE.Vector3();
   direction = new THREE.Vector2(0, 0);
-  velocity: number;
-  acceleration: number;
-  radius: number;
+  velocity: number = 0;
+  acceleration: number = 0;
+  radius: number = 0;
   orientation: number;
-  isExpired: boolean;
+  isExpired: boolean = false;
   loader = new THREE.TextureLoader();
   speed = new THREE.Vector2(0, 0);
 
   init(scene: ScriptableScene): void {}
-  update(scene: THREE.Scene): void {}
+
+  update(scene: THREE.Scene, delta: number): void {}
+
+  draw(scene: THREE.Scene, delta: number): void {}
 }

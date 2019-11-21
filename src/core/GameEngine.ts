@@ -4,7 +4,6 @@ import SceneConfig from "../scenes/SceneConfig";
 import GameScene from "./ScriptableScene";
 import SceneFactory from "../scenes/SceneFactory";
 
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import Stats from "three/examples/jsm/libs/stats.module.js";
 import { EffectComposer } from "three/examples/jsm/postprocessing/EffectComposer.js";
 import { RenderPass } from "three/examples/jsm/postprocessing/RenderPass.js";
@@ -33,7 +32,7 @@ export default class GameEngine {
     this.clock = new THREE.Clock();
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(75, 800 / 600, 0.1, 1000);
-    this.camera.position.set(0, 0, 20);
+    this.camera.position.set(0, 0, 200);
 
     this.stats = new Stats();
     domElement.appendChild(this.stats.dom);
@@ -43,8 +42,6 @@ export default class GameEngine {
     this.initComposer(domElement);
 
     this.initGui();
-
-    var controls = new OrbitControls(this.camera, this.renderer.domElement);
 
     window.onresize = () => {
       const boundingRect = domElement.getBoundingClientRect();
@@ -98,6 +95,8 @@ export default class GameEngine {
     this.renderer = new THREE.WebGLRenderer();
     const boundingRect = domElement.getBoundingClientRect();
     this.renderer.setSize(boundingRect.width, boundingRect.height);
+    this.camera.aspect = boundingRect.width / boundingRect.height;
+    this.camera.updateProjectionMatrix();
     domElement.appendChild(this.renderer.domElement);
   }
 
