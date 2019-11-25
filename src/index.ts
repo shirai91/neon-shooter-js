@@ -15,6 +15,11 @@ async function initGameEngine() {
     ASSETS.SHIP.path
   );
 
+  await ContentManager.getInstance().loadContent(
+    ASSETS.WANDERER.name,
+    ASSETS.WANDERER.path
+  );
+
   const gameEngine = new GameEngine(rootNode!);
   const testScene = new TestCubeScene();
 
