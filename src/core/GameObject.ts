@@ -21,6 +21,7 @@ export abstract class GameObject {
   radius: number = 10;
   orientation: number = 0;
   isExpired: boolean = false;
+  canExpire = false;
   loader = new TextureLoader();
 
   constructor() {

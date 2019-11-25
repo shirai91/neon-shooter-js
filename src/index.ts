@@ -1,7 +1,7 @@
 import { GameEngine } from "./core/GameEngine";
 import { ContentManager } from "./core/ContentManager";
 import { ASSETS } from "./assetList";
-import { TestCubeScene } from "./scenes/TestCubeScene";
+import TestScene from "./scenes/TestScene";
 
 async function initGameEngine() {
   const rootNode = document.getElementById("container");
@@ -20,8 +20,13 @@ async function initGameEngine() {
     ASSETS.WANDERER.path
   );
 
+  await ContentManager.getInstance().loadContent(
+    ASSETS.BULLET.name,
+    ASSETS.BULLET.path
+  );
+
   const gameEngine = new GameEngine(rootNode!);
-  const testScene = new TestCubeScene();
+  const testScene = new TestScene();
 
   gameEngine.setEntry(testScene);
   gameEngine.startEngine();

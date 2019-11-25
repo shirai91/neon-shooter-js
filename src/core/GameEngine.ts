@@ -98,6 +98,7 @@ export class GameEngine {
     this.camera.aspect = boundingRect.width / boundingRect.height;
     this.camera.updateProjectionMatrix();
     domElement.appendChild(this.renderer.domElement);
+    GameManager.getInstance().setRenderer(this.renderer);
   }
 
   startEngine() {
