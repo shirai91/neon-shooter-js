@@ -29,7 +29,7 @@ export class GameEngine {
     this.clock = new THREE.Clock();
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(75, 800 / 600, 0.1, 1000);
-    this.camera.position.set(0, 0, 200);
+    this.camera.position.set(50, 50, 200);
 
     this.stats = new Stats();
     domElement.appendChild(this.stats.dom);

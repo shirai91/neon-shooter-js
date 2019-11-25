@@ -3,6 +3,7 @@ import { GameObject } from "~core/GameObject";
 import { GameManager } from "~core/GameManager";
 import { ASSETS } from "~assetList";
 import { ContentManager } from "~core/ContentManager";
+import { toVector3, getRandomInt, toVector2 } from "~core/utils";
 import { InputManager } from "~core/InputManager";
 import { Vector2, Vector3 } from "three";
 
@@ -13,7 +14,7 @@ const CONTROL_KEYS = {
   RIGHT: 39
 };
 
-const SHIP_SPEED = 2;
+const SHIP_SPEED = 100;
 const ROTATION_VALUE = Math.PI / 2;
 
 export default class Ship extends GameObject {
@@ -66,10 +67,12 @@ export default class Ship extends GameObject {
 
   update(delta: number) {
     this.velocity = this.getMovementDirection().multiplyScalar(SHIP_SPEED);
+
     if (this.velocity.lengthSq() > 0) {
       this.orientation = this.velocity.angle();
     }
-    this.position.add(new Vector3(this.velocity.x, this.velocity.y, 0));
+
+    this.position.add(toVector3(this.velocity).multiplyScalar(delta));
   }
 
   draw() {

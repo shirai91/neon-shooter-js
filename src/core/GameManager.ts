@@ -4,6 +4,7 @@ export class GameManager {
   private static instance: GameManager;
   private camera: PerspectiveCamera;
   private scene: Scene;
+  private debug: boolean = false;
   private constructor() {}
   static getInstance() {
     if (!GameManager.instance) {
@@ -33,5 +34,13 @@ export class GameManager {
     while (this.scene.children.length > 0) {
       this.scene.remove(this.scene.children[0]);
     }
+  }
+
+  getDebugStatus(): boolean {
+    return this.debug;
+  }
+
+  setDebugStatus(status: boolean) {
+    this.debug = status;
   }
 }
