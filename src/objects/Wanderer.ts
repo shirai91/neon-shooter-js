@@ -15,7 +15,7 @@ import { Vector2, Vector3, Geometry } from "three";
 const WANDERER_SPEED = 50;
 const ROTATION_VALUE = Math.PI / 40;
 
-export default class Wanderer extends GameObject {
+export class Wanderer extends GameObject {
   destination: Vector2;
   count = 0;
   debugDirectionLine: THREE.Line;
