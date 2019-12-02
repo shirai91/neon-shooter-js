@@ -2,15 +2,18 @@ import { GameObject } from "~core/GameObject";
 import { GameManager } from "~core/GameManager";
 import { Scene, Vector2 } from "three";
 import { ContentManager } from "~core/ContentManager";
-import { ASSETS } from "~assetList";
+import { ASSETS } from "~settings/assetList";
 import { toVector3 } from "~core/utils";
 import { EntityManager } from "~core/EntityManager";
+import { ENTITY_TYPE } from "~settings/entityType";
 
 const VELOCITY = 200;
 const EXPIRE_TIME = 2;
 
 export class Bullet extends GameObject {
   remainingLifeTime = EXPIRE_TIME;
+  type = ENTITY_TYPE.BULLET;
+  radius = 7;
   /**
    *
    * @param position
@@ -44,7 +47,6 @@ export class Bullet extends GameObject {
     if (!this.canExpire) return;
     if (this.remainingLifeTime <= 0) {
       this.isExpired = true;
-      EntityManager.getInstance().remove(this);
     } else {
       this.remainingLifeTime -= delta;
     }

@@ -1,4 +1,5 @@
 import { Vector2, Vector3 } from "three";
+import { GameObject } from "./GameObject";
 
 export function toVector3(v: Vector2): Vector3 {
   return new Vector3(v.x, v.y, 0);
@@ -21,4 +22,16 @@ export function getRandomColor() {
     color += letters[Math.floor(Math.random() * 16)];
   }
   return color;
+}
+
+export function isColliding(a: GameObject, b: GameObject) {
+  if (a.isExpired || b.isExpired) {
+    return false;
+  }
+
+  const radius = a.radius + b.radius;
+  const distanceToSquared = toVector2(a.position).distanceToSquared(
+    toVector2(b.position)
+  );
+  return distanceToSquared < radius * radius;
 }

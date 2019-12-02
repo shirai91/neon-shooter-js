@@ -1,12 +1,13 @@
 import { GameObject } from "~core/GameObject";
 import { GameManager } from "~core/GameManager";
-import { ASSETS } from "~assetList";
+import { ASSETS } from "~settings/assetList";
 import { ContentManager } from "~core/ContentManager";
 import { toVector3, getRandomInt, toVector2 } from "~core/utils";
 import { InputManager } from "~core/InputManager";
 import { Vector2, Vector3, Scene, Raycaster } from "three";
 import { Bullet } from "./Bullet";
 import { EntityManager } from "~core/EntityManager";
+import { ENTITY_TYPE } from "~settings/entityType";
 
 const CONTROL_KEYS = {
   UP: 38,
@@ -19,9 +20,13 @@ const SHIP_SPEED = 100;
 const FIRE_RATE = 0.2;
 
 export class Ship extends GameObject {
+  type = ENTITY_TYPE.PLAYER;
   cooldownRemaining = 0;
   toggleFire = true;
+  bulletPerShot = 1;
   raycaster = new Raycaster();
+  isActive = true;
+
   init() {
     const scene = GameManager.getInstance().getScene();
     this.loadTexture(scene);
@@ -29,6 +34,10 @@ export class Ship extends GameObject {
     window.addEventListener("keydown", this.handleKeyDown);
     window.addEventListener("keyup", this.handleKeyUp);
     window.addEventListener("mousemove", this.handleMouseMove);
+  }
+
+  getHit() {
+    console.log("DEBUG: YOU GOT HIT, GAME IS OVER");
   }
 
   handleKeyDown = (event: KeyboardEvent) => {
@@ -99,6 +108,23 @@ export class Ship extends GameObject {
     }
   }
 
+  createBullet() {
+    const bulletDirection = new Vector2();
+    bulletDirection
+      .subVectors(
+        InputManager.getInstance().getMouseAim(),
+        toVector2(this.position)
+      )
+      .normalize();
+    const bulletPosition = toVector2(this.position);
+    bulletPosition.add(
+      new Vector2(bulletDirection.x * 8, bulletDirection.y * 8)
+    );
+    const bullet = new Bullet(bulletPosition, bulletDirection);
+    bullet.init();
+    EntityManager.getInstance().add(bullet);
+  }
+
   fireBullet(delta) {
     if (!this.toggleFire) return;
 
@@ -109,16 +135,7 @@ export class Ship extends GameObject {
       return;
     }
     if (this.cooldownRemaining <= 0) {
-      const bulletDirection = new Vector2();
-      bulletDirection
-        .subVectors(
-          InputManager.getInstance().getMouseAim(),
-          toVector2(this.position)
-        )
-        .normalize();
-      const bullet = new Bullet(toVector2(this.position), bulletDirection);
-      bullet.init();
-      EntityManager.getInstance().add(bullet);
+      this.createBullet();
       this.cooldownRemaining = FIRE_RATE;
     } else {
       this.cooldownRemaining -= delta;
