@@ -12,11 +12,12 @@ import {
 import { InputManager } from "~core/InputManager";
 import { Vector2, Vector3, Geometry } from "three";
 import { ENTITY_TYPE } from "~settings/entityType";
+import { Enemy } from "./Enemy";
 
 const WANDERER_SPEED = 50;
 const ROTATION_VALUE = Math.PI / 40;
 
-export class Wanderer extends GameObject {
+export class Wanderer extends Enemy {
   type = ENTITY_TYPE.ENEMY;
   destination: Vector2;
   count = 0;

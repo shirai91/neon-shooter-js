@@ -8,10 +8,8 @@ import {
   PlaneGeometry
 } from "three";
 import { GameManager } from "./GameManager";
-import { ENTITY_TYPE } from "~settings/entityType";
 
 export abstract class GameObject {
-  type = ENTITY_TYPE.OTHER;
   geometry = new PlaneGeometry(0, 0, 0);
   mesh: Mesh = new Mesh(this.geometry, new MeshBasicMaterial());
   uniqueName = this.mesh.uuid;
