@@ -1,11 +1,11 @@
 import { GameObject } from "./GameObject";
 import { GameManager } from "./GameManager";
-import { ENTITY_TYPE } from "~settings/entityType";
-import { isColliding } from "./utils";
+import { isColliding, toVector2 } from "./utils";
 import { Wanderer } from "~objects/Wanderer";
 import { Ship } from "~objects/Ship";
 import { Bullet } from "~objects/Bullet";
 import { Enemy } from "~objects/Enemy";
+import { Vector2 } from "three";
 
 export class EntityManager {
   private static instance: EntityManager;
@@ -101,6 +101,19 @@ export class EntityManager {
     this.handleCollisionBetweenEnemyAndEnemy();
     this.handleCollisionBetweenPlayerAndEnemy();
     this.handleCollisionBetweenBulletAndEnemy();
+  }
+
+  getNearbyEntities(position: Vector2, radius: number) {
+    return this.entities.filter(entity => {
+      const squaredDistance = position.distanceToSquared(
+        toVector2(entity.position)
+      );
+      if (squaredDistance > radius * radius) {
+        return false;
+      } else {
+        return true;
+      }
+    });
   }
 
   update(delta: number) {

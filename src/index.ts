@@ -25,6 +25,11 @@ async function initGameEngine() {
     ASSETS.BULLET.path
   );
 
+  await ContentManager.getInstance().loadContent(
+    ASSETS.BLACK_HOLE.name,
+    ASSETS.BLACK_HOLE.path
+  );
+
   const gameEngine = new GameEngine(rootNode!);
   const testScene = new TestScene();
 
