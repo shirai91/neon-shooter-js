@@ -20,13 +20,15 @@ export default class TestScene extends GameObject {
     camera.lookAt(new Vector3(50, 50, 0));
 
     for (let index = 0; index < 50; index++) {
-      const wanderer = new Wanderer();
+      const randomX = getRandomInt(-200, 200);
+      const randomY = getRandomInt(-200, 200);
+      const wanderer = new Wanderer(new Vector2(randomX, randomY));
       EntityManager.getInstance().add(wanderer);
       wanderer.init();
     }
     for (let index = 0; index < 5; index++) {
-      const randomX = getRandomInt(-100, 100);
-      const randomY = getRandomInt(-100, 100);
+      const randomX = getRandomInt(-200, 200);
+      const randomY = getRandomInt(-200, 200);
       const blackhole = new BlackHole(new Vector2(randomX, randomY));
       EntityManager.getInstance().add(blackhole);
       blackhole.init();

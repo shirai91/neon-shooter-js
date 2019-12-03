@@ -20,7 +20,7 @@ const FIRE_RATE = 0.2;
 
 export class Ship extends GameObject {
   cooldownRemaining = 0;
-  toggleFire = true;
+  toggleFire = false;
   bulletPerShot = 1;
   raycaster = new Raycaster();
   isActive = true;

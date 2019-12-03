@@ -14,4 +14,5 @@ export abstract class Enemy extends GameObject {
   changeDirectionThresholdRemaining = 0.5;
   radius = 10;
   abstract handleCollision(otherEnemy: GameObject): void;
+  abstract getHit(actor: GameObject): void;
 }

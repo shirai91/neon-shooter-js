@@ -7,6 +7,9 @@ import { EntityManager } from "~core/EntityManager";
 import { toVector2 } from "~core/utils";
 import { Enemy } from "./Enemy";
 import { Bullet } from "./Bullet";
+import * as THREE from "three";
+
+const AREA_OF_EFFECT = 50;
 
 export class BlackHole extends GameObject {
   constructor(position: Vector2) {
@@ -31,11 +34,14 @@ export class BlackHole extends GameObject {
   update() {
     const nearbyEntities = EntityManager.getInstance().getNearbyEntities(
       toVector2(this.position),
-      50
+      AREA_OF_EFFECT
     );
 
     nearbyEntities.forEach(entity => {
-      if (entity instanceof Enemy) {
+      if (entity instanceof BlackHole) {
+        return;
+      }
+      if (entity instanceof Enemy && !entity.isActive) {
         return;
       }
       if (entity instanceof Bullet) {
@@ -44,6 +50,12 @@ export class BlackHole extends GameObject {
           .multiplyScalar(0.3);
         entity.velocity.add(velocityAdjustment);
       } else {
+        const directionPosition = toVector2(this.position).sub(
+          toVector2(entity.position)
+        );
+        const length = directionPosition.length();
+        const multiple = THREE.Math.lerp(2, 0, length / AREA_OF_EFFECT);
+        entity.velocity.add(directionPosition.multiplyScalar(multiple));
       }
     });
   }

@@ -25,16 +25,25 @@ export class Wanderer extends Enemy {
   changeDirectionThresholdRemaining = 0.5;
   radius = 10;
 
+  constructor(position: Vector2) {
+    super();
+    this.position.set(position.x, position.y, 0);
+  }
+
   init() {
     const scene = GameManager.getInstance().getScene();
     this.loadTexture(scene);
-    this.position.set(0, 0, 0);
+
     this.destination = new Vector2(this.position.x, this.position.y);
     this.velocity = new Vector2(0, 0);
 
     if (GameManager.getInstance().getDebugStatus() === true) {
       this.initDirectionLine();
     }
+  }
+
+  getHit(actor: GameObject) {
+    this.isExpired = true;
   }
 
   initDirectionLine() {
@@ -79,10 +88,16 @@ export class Wanderer extends Enemy {
       return;
     }
     if (this.position.distanceTo(toVector3(this.destination)) < 1) {
+      console.log("change position");
       const newDestination = this.getNewDestination();
       this.destination.set(newDestination.x, newDestination.y);
       this.isCanChangeDirection = false;
       this.changeDirectionThresholdRemaining = this.changeDirectionThresholdTime;
+      this.velocity
+        .subVectors(this.destination, toVector2(this.position))
+        .normalize()
+        .multiplyScalar(WANDERER_SPEED);
+      console.log(this.velocity);
     }
   }
 
@@ -104,13 +119,6 @@ export class Wanderer extends Enemy {
     (<Geometry>this.debugDirectionLine.geometry).verticesNeedUpdate = true;
   }
 
-  applyPhysic() {
-    this.velocity
-      .subVectors(this.destination, toVector2(this.position))
-      .normalize()
-      .multiplyScalar(WANDERER_SPEED);
-  }
-
   calculateThresholdTime(delta: number) {
     if (this.changeDirectionThresholdRemaining < 0) {
       this.isCanChangeDirection = true;
@@ -122,13 +130,10 @@ export class Wanderer extends Enemy {
   update(delta: number) {
     this.calculateThresholdTime(delta);
     this.processingAI();
-    this.applyPhysic();
 
-    this.position.add(
-      toVector3(this.velocity.multiplyScalar(delta)).addScalar(
-        this.acceleration
-      )
-    );
+    this.position
+      .add(toVector3(this.velocity).multiplyScalar(delta))
+      .addScalar(this.acceleration);
   }
 
   draw() {

@@ -23,6 +23,7 @@ export abstract class GameObject {
   isExpired: boolean = false;
   canExpire = false;
   loader = new TextureLoader();
+  isActive = true;
 
   constructor() {
     const scene = GameManager.getInstance().getScene();
