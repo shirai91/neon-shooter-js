@@ -4,6 +4,8 @@ import { ENTITY_TYPE } from "~settings/entityType";
 import { isColliding } from "./utils";
 import { Wanderer } from "~objects/Wanderer";
 import { Ship } from "~objects/Ship";
+import { Bullet } from "~objects/Bullet";
+import { Enemy } from "~objects/Enemy";
 
 export class EntityManager {
   private static instance: EntityManager;
@@ -21,10 +23,10 @@ export class EntityManager {
 
   add(object: GameObject) {
     this.entities.push(object);
-    if (object.type === ENTITY_TYPE.BULLET) {
+    if (object instanceof Bullet) {
       this.bullets.push(object);
     }
-    if (object.type === ENTITY_TYPE.ENEMY) {
+    if (object instanceof Enemy) {
       this.enemies.push(object);
     }
   }
@@ -64,8 +66,8 @@ export class EntityManager {
         const currentEnemy = this.enemies[currentIndex];
         const nextEnemy = this.enemies[nextIndex];
         if (isColliding(currentEnemy, nextEnemy)) {
-          (<Wanderer>currentEnemy).handleCollision(nextEnemy);
-          (<Wanderer>nextEnemy).handleCollision(currentEnemy);
+          (<Enemy>currentEnemy).handleCollision(nextEnemy);
+          (<Enemy>nextEnemy).handleCollision(currentEnemy);
         }
       }
     }
@@ -90,7 +92,7 @@ export class EntityManager {
     for (let i = 0; i < this.enemies.length; i++) {
       if (isColliding(this.enemies[i], this.player)) {
         (<Ship>this.player).getHit();
-        (<Wanderer>this.enemies[i]).handleCollision(this.player);
+        (<Enemy>this.enemies[i]).handleCollision(this.player);
       }
     }
   }
@@ -115,7 +117,6 @@ export class EntityManager {
   }
 
   remove(object: GameObject) {
-    // this.entities = this.entities.filter(item => item !== object);
     GameManager.getInstance()
       .getScene()
       .remove(object.mesh);
