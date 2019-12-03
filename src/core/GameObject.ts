@@ -8,8 +8,10 @@ import {
   PlaneGeometry
 } from "three";
 import { GameManager } from "./GameManager";
+import { ENTITY_TYPE } from "~settings/entityType";
 
 export abstract class GameObject {
+  type = ENTITY_TYPE.OTHER;
   geometry = new PlaneGeometry(0, 0, 0);
   mesh: Mesh = new Mesh(this.geometry, new MeshBasicMaterial());
   uniqueName = this.mesh.uuid;
@@ -18,7 +20,7 @@ export abstract class GameObject {
   direction = new Vector2(0, 0);
   velocity = new Vector2(0, 0);
   acceleration: number = 0;
-  radius: number = 10;
+  radius: number = 0;
   orientation: number = 0;
   isExpired: boolean = false;
   canExpire = false;

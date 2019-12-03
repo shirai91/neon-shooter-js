@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { GameObject } from "~core/GameObject";
 import { GameManager } from "~core/GameManager";
-import { ASSETS } from "~assetList";
+import { ASSETS } from "~settings/assetList";
 import { ContentManager } from "~core/ContentManager";
 import {
   toVector3,
@@ -11,17 +11,20 @@ import {
 } from "~core/utils";
 import { InputManager } from "~core/InputManager";
 import { Vector2, Vector3, Geometry } from "three";
+import { ENTITY_TYPE } from "~settings/entityType";
 
 const WANDERER_SPEED = 50;
 const ROTATION_VALUE = Math.PI / 40;
 
 export class Wanderer extends GameObject {
+  type = ENTITY_TYPE.ENEMY;
   destination: Vector2;
   count = 0;
   debugDirectionLine: THREE.Line;
   isCanChangeDirection = true;
   changeDirectionThresholdTime = 0.5;
   changeDirectionThresholdRemaining = 0.5;
+  radius = 10;
 
   init() {
     const scene = GameManager.getInstance().getScene();
@@ -58,6 +61,14 @@ export class Wanderer extends GameObject {
       ASSETS.WANDERER.name
     );
     this.setImage(wandererTexture);
+  }
+
+  handleCollision(otherEnemy: GameObject) {
+    const direction = toVector2(this.position).sub(
+      toVector2(otherEnemy.position)
+    );
+    direction.divideScalar(direction.lengthSq() + 1).multiplyScalar(10);
+    this.velocity.add(direction);
   }
 
   getNewDestination() {

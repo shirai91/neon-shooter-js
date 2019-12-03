@@ -1,6 +1,6 @@
 import { GameEngine } from "./core/GameEngine";
 import { ContentManager } from "./core/ContentManager";
-import { ASSETS } from "./assetList";
+import { ASSETS } from "./settings/assetList";
 import TestScene from "./scenes/TestScene";
 
 async function initGameEngine() {

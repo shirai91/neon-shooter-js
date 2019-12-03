@@ -2,10 +2,12 @@ import { GameObject } from "~core/GameObject";
 import { GameManager } from "~core/GameManager";
 import { Scene, Vector2, MeshBasicMaterial, Color } from "three";
 import { ContentManager } from "~core/ContentManager";
-import { ASSETS } from "~assetList";
+import { ASSETS } from "~settings/assetList";
 import { toVector3 } from "~core/utils";
+import { ENTITY_TYPE } from "~settings/entityType";
 
 export class Platform extends GameObject {
+  type = ENTITY_TYPE.OTHER;
   init() {
     const scene = GameManager.getInstance().getScene();
     this.position.set(this.position.x, this.position.y, -0.1);

@@ -25,6 +25,7 @@ export default class TestScene extends GameObject {
     }
     this.player = new Ship();
     EntityManager.getInstance().add(this.player);
+    EntityManager.getInstance().player = this.player;
     this.player.init();
   }
 
