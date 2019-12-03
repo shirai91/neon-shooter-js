@@ -6,13 +6,15 @@ import { Ship } from "~objects/Ship";
 import { Bullet } from "~objects/Bullet";
 import { Enemy } from "~objects/Enemy";
 import { Vector2 } from "three";
+import { BlackHole } from "~objects/BlackHole";
 
 export class EntityManager {
   private static instance: EntityManager;
   player: GameObject;
   private entities: GameObject[] = [];
-  private enemies: GameObject[] = [];
-  private bullets: GameObject[] = [];
+  private enemies: Enemy[] = [];
+  private bullets: Bullet[] = [];
+  private blackHoles: BlackHole[] = [];
   private constructor() {}
   static getInstance() {
     if (!EntityManager.instance) {
@@ -28,6 +30,10 @@ export class EntityManager {
     }
     if (object instanceof Enemy) {
       this.enemies.push(object);
+    }
+
+    if (object instanceof BlackHole) {
+      this.blackHoles.push(object);
     }
   }
 
@@ -50,6 +56,16 @@ export class EntityManager {
         this.remove(object);
       });
     this.enemies = this.enemies.filter(object => !object.isExpired);
+  }
+
+  handleCollisionForBlackhole() {
+    this.blackHoles.forEach(blackhole => {
+      this.enemies.forEach(enemy => {
+        if (isColliding(blackhole, enemy)) {
+          enemy.getHit(blackhole);
+        }
+      });
+    });
   }
 
   handleCollisionBetweenEnemyAndEnemy() {
@@ -101,6 +117,7 @@ export class EntityManager {
     this.handleCollisionBetweenEnemyAndEnemy();
     this.handleCollisionBetweenPlayerAndEnemy();
     this.handleCollisionBetweenBulletAndEnemy();
+    this.handleCollisionForBlackhole();
   }
 
   getNearbyEntities(position: Vector2, radius: number) {
