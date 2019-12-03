@@ -1,5 +1,6 @@
 import { Ship } from "~objects/Ship";
 import { Wanderer } from "~objects/Wanderer";
+import { Seeker } from "~objects/Seeker";
 import { GameObject } from "~core/GameObject";
 import { GameManager } from "~core/GameManager";
 import { Vector3, Vector2 } from "three";
@@ -25,6 +26,13 @@ export default class TestScene extends GameObject {
       const wanderer = new Wanderer(new Vector2(randomX, randomY));
       EntityManager.getInstance().add(wanderer);
       wanderer.init();
+    }
+    for (let index = 0; index < 10; index++) {
+      const randomX = getRandomInt(-200, 200);
+      const randomY = getRandomInt(-200, 200);
+      const seeker = new Seeker(new Vector2(randomX, randomY));
+      EntityManager.getInstance().add(seeker);
+      seeker.init();
     }
     for (let index = 0; index < 5; index++) {
       const randomX = getRandomInt(-200, 200);

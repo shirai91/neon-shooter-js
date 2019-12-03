@@ -11,6 +11,10 @@ export const ASSETS = {
     name: "Wanderer",
     path: "assets/Wanderer.png"
   },
+  SEEKER: {
+    name: "Seeker",
+    path: "assets/seeker.png"
+  },
   BLACK_HOLE: {
     name: "BlackHole",
     path: "assets/BlackHole.png"
