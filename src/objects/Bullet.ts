@@ -5,14 +5,12 @@ import { ContentManager } from "~core/ContentManager";
 import { ASSETS } from "~settings/assetList";
 import { toVector3 } from "~core/utils";
 import { EntityManager } from "~core/EntityManager";
-import { ENTITY_TYPE } from "~settings/entityType";
 
 const VELOCITY = 200;
 const EXPIRE_TIME = 2;
 
 export class Bullet extends GameObject {
   remainingLifeTime = EXPIRE_TIME;
-  type = ENTITY_TYPE.BULLET;
   radius = 7;
   /**
    *

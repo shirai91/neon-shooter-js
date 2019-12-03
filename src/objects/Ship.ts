@@ -7,7 +7,6 @@ import { InputManager } from "~core/InputManager";
 import { Vector2, Vector3, Scene, Raycaster } from "three";
 import { Bullet } from "./Bullet";
 import { EntityManager } from "~core/EntityManager";
-import { ENTITY_TYPE } from "~settings/entityType";
 
 const CONTROL_KEYS = {
   UP: 38,
@@ -20,7 +19,6 @@ const SHIP_SPEED = 100;
 const FIRE_RATE = 0.2;
 
 export class Ship extends GameObject {
-  type = ENTITY_TYPE.PLAYER;
   cooldownRemaining = 0;
   toggleFire = true;
   bulletPerShot = 1;

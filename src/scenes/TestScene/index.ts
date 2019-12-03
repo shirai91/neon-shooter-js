@@ -4,7 +4,8 @@ import { GameObject } from "~core/GameObject";
 import { GameManager } from "~core/GameManager";
 import { Vector3, Vector2 } from "three";
 import { EntityManager } from "~core/EntityManager";
-import { Bullet } from "~objects/Bullet";
+import { BlackHole } from "~objects/BlackHole";
+import { getRandomInt } from "~core/utils";
 
 export default class TestScene extends GameObject {
   name = "testCube";
@@ -22,6 +23,13 @@ export default class TestScene extends GameObject {
       const wanderer = new Wanderer();
       EntityManager.getInstance().add(wanderer);
       wanderer.init();
+    }
+    for (let index = 0; index < 5; index++) {
+      const randomX = getRandomInt(-100, 100);
+      const randomY = getRandomInt(-100, 100);
+      const blackhole = new BlackHole(new Vector2(randomX, randomY));
+      EntityManager.getInstance().add(blackhole);
+      blackhole.init();
     }
     this.player = new Ship();
     EntityManager.getInstance().add(this.player);
