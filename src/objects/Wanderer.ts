@@ -15,14 +15,14 @@ import { Enemy } from "./Enemy";
 
 const WANDERER_SPEED = 50;
 const ROTATION_VALUE = Math.PI / 40;
+const CHANGE_DIRECTION_THRESHOLD = 0.5;
 
 export class Wanderer extends Enemy {
   destination: Vector2;
   count = 0;
   debugDirectionLine: THREE.Line;
   isCanChangeDirection = true;
-  changeDirectionThresholdTime = 0.5;
-  changeDirectionThresholdRemaining = 0.5;
+  changeDirectionThresholdRemaining = CHANGE_DIRECTION_THRESHOLD;
   radius = 10;
 
   constructor(position: Vector2) {
@@ -88,7 +88,6 @@ export class Wanderer extends Enemy {
       return;
     }
     if (this.position.distanceTo(toVector3(this.destination)) < 1) {
-      console.log("change position");
       const newDestination = this.getNewDestination();
       this.destination.set(newDestination.x, newDestination.y);
       this.isCanChangeDirection = false;
@@ -97,7 +96,6 @@ export class Wanderer extends Enemy {
         .subVectors(this.destination, toVector2(this.position))
         .normalize()
         .multiplyScalar(WANDERER_SPEED);
-      console.log(this.velocity);
     }
   }
 
