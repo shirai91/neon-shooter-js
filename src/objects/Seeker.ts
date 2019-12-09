@@ -12,17 +12,20 @@ import {
 import { InputManager } from "~core/InputManager";
 import { Vector2, Vector3, Geometry } from "three";
 import { Enemy } from "./Enemy";
+import { EntityManager } from "~core/EntityManager";
 
-const WANDERER_SPEED = 50;
+const SEEKER_SPEED = 50;
 const ROTATION_VALUE = Math.PI / 40;
 const CHANGE_DIRECTION_THRESHOLD = 0.5;
+const UPDATE_TARGET_THRESHOLD_TIME = 0.5;
 
-export class Wanderer extends Enemy {
+export class Seeker extends Enemy {
   destination: Vector2;
   count = 0;
   debugDirectionLine: THREE.Line;
   isCanChangeDirection = true;
   changeDirectionThresholdRemaining = CHANGE_DIRECTION_THRESHOLD;
+  updateTargetTimeRemaininng = UPDATE_TARGET_THRESHOLD_TIME;
   radius = 10;
 
   constructor(position: Vector2) {
@@ -33,7 +36,6 @@ export class Wanderer extends Enemy {
   init() {
     const scene = GameManager.getInstance().getScene();
     this.loadTexture(scene);
-
     this.destination = new Vector2(this.position.x, this.position.y);
     this.velocity = new Vector2(0, 0);
 
@@ -65,10 +67,10 @@ export class Wanderer extends Enemy {
 
   loadTexture(scene: THREE.Scene) {
     this.setScale(10, 10);
-    const wandererTexture = ContentManager.getInstance().getAsset(
-      ASSETS.WANDERER.name
+    const seekerTexture = ContentManager.getInstance().getAsset(
+      ASSETS.SEEKER.name
     );
-    this.setImage(wandererTexture);
+    this.setImage(seekerTexture);
   }
 
   handleCollision(otherEnemy: GameObject) {
@@ -80,27 +82,24 @@ export class Wanderer extends Enemy {
   }
 
   getNewDestination() {
-    return new Vector2(getRandomInt(-300, 300), getRandomInt(-300, 300));
-  }
-
-  changeDestinationWhenReachOldDestination() {
-    if (!this.isCanChangeDirection) {
-      return;
-    }
-    if (this.position.distanceTo(toVector3(this.destination)) < 1) {
-      const newDestination = this.getNewDestination();
-      this.destination.set(newDestination.x, newDestination.y);
-      this.isCanChangeDirection = false;
-      this.changeDirectionThresholdRemaining = this.changeDirectionThresholdTime;
-      this.velocity
-        .subVectors(this.destination, toVector2(this.position))
-        .normalize()
-        .multiplyScalar(WANDERER_SPEED);
-    }
+    return new Vector2(
+      EntityManager.getInstance().player.position.x,
+      EntityManager.getInstance().player.position.y
+    );
   }
 
   processingAI() {
-    this.changeDestinationWhenReachOldDestination();
+    if (!this.isCanChangeDirection) {
+      return;
+    }
+    const newDestination = this.getNewDestination();
+    this.destination.set(newDestination.x, newDestination.y);
+    this.isCanChangeDirection = false;
+    this.changeDirectionThresholdRemaining = this.changeDirectionThresholdTime;
+    this.velocity
+      .subVectors(this.destination, toVector2(this.position))
+      .normalize()
+      .multiplyScalar(SEEKER_SPEED);
   }
 
   updateDebugLine() {
@@ -129,13 +128,17 @@ export class Wanderer extends Enemy {
     this.calculateThresholdTime(delta);
     this.processingAI();
 
+    if (this.velocity.lengthSq() > 0) {
+      this.orientation = this.velocity.angle();
+    }
+
     this.position
       .add(toVector3(this.velocity).multiplyScalar(delta))
       .addScalar(this.acceleration);
   }
 
   draw() {
-    this.mesh.rotation.z += ROTATION_VALUE;
+    this.mesh.rotation.set(0, 0, this.orientation);
     this.mesh.position.set(this.position.x, this.position.y, 0);
 
     if (GameManager.getInstance().getDebugStatus() === true) {

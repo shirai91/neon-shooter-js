@@ -15,7 +15,7 @@ export class EntityManager {
   private enemies: Enemy[] = [];
   private bullets: Bullet[] = [];
   private blackHoles: BlackHole[] = [];
-  private constructor() {}
+  private constructor() { }
   static getInstance() {
     if (!EntityManager.instance) {
       EntityManager.instance = new EntityManager();
@@ -107,6 +107,7 @@ export class EntityManager {
   handleCollisionBetweenPlayerAndEnemy() {
     for (let i = 0; i < this.enemies.length; i++) {
       if (isColliding(this.enemies[i], this.player)) {
+        this.enemies[i].getHit(this.player);
         (<Ship>this.player).getHit();
         (<Enemy>this.enemies[i]).handleCollision(this.player);
       }

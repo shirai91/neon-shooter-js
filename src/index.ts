@@ -21,6 +21,11 @@ async function initGameEngine() {
   );
 
   await ContentManager.getInstance().loadContent(
+    ASSETS.SEEKER.name,
+    ASSETS.SEEKER.path
+  );
+
+  await ContentManager.getInstance().loadContent(
     ASSETS.BULLET.name,
     ASSETS.BULLET.path
   );
