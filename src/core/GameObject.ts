@@ -39,6 +39,10 @@ export abstract class GameObject {
     (<MeshBasicMaterial>this.mesh.material).needsUpdate = true;
   }
 
+  setHexColor(hexColor: number) {
+    (<MeshBasicMaterial>this.mesh.material).color.setHex(hexColor)
+  }
+
   init(): void {}
 
   update(delta: number): void {}

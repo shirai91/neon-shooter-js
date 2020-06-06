@@ -7,6 +7,7 @@ import { EntityManager } from "~core/EntityManager";
 import { BlackHole } from "~objects/BlackHole";
 import { getRandomInt } from "~core/utils";
 import { GameSubscription } from "~core/GameSubscriptions";
+import { Seeker } from "~objects/Seeker";
 
 type GameStates = "playing" | "menu";
 const MOB_SPAWN_TIME = 1;
@@ -58,14 +59,22 @@ export default class Survival extends GameObject {
     this.mobSpawnCooldown = this.mobSpawnCooldown - delta;
     if(this.mobSpawnCooldown <= 0) {
       this.mobSpawnCooldown = MOB_SPAWN_TIME + this.mobSpawnCooldown;
-      if(EntityManager.getInstance().getEnemiesCount('Wanderer') > MAX_MOBS) {
+      if(EntityManager.getInstance().getEnemiesCount() > MAX_MOBS) {
         return;
       }
       const randomX = getRandomInt(-200, 200);
       const randomY = getRandomInt(-200, 200);
-      const wanderer = new Wanderer(new Vector2(randomX, randomY));
-      EntityManager.getInstance().add(wanderer);
-      wanderer.init();
+      const random = getRandomInt(0,2);
+      let enemy;
+      if(random===0) {
+        enemy = new Wanderer(new Vector2(randomX, randomY));
+      }
+
+      if(random ===1) {
+        enemy = new Seeker(new Vector2(randomX, randomY));
+      }
+      EntityManager.getInstance().add(enemy);
+      enemy.init();
     }
   }
 

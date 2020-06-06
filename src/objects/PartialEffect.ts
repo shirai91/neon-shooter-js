@@ -11,7 +11,7 @@ const EXPIRE_TIME = 3;
 
 export class PartialEffect extends GameObject {
   remainingLifeTime = EXPIRE_TIME;
-  radius = 7;
+  radius = 5;
   /**
    *
    * @param position
@@ -34,11 +34,12 @@ export class PartialEffect extends GameObject {
   }
 
   loadTexture(scene: Scene) {
-    this.setScale(7, 3);
+    this.setScale(6, 1.5);
     const laserTexture = ContentManager.getInstance().getAsset(
       ASSETS.LASER.name
     );
     this.setImage(laserTexture);
+    this.setHexColor(Math.random() * 0xffffff);
   }
 
   updateExpireTime(delta: number) {

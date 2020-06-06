@@ -14,6 +14,7 @@ import { Vector2, Vector3, Geometry } from "three";
 import { Enemy } from "./Enemy";
 import { Bullet } from "./Bullet";
 import { EntityManager } from "~core/EntityManager";
+import { BlackHole } from "./BlackHole";
 
 const WANDERER_SPEED = 50;
 const ROTATION_VALUE = Math.PI / 40;
@@ -50,6 +51,10 @@ export class Wanderer extends Enemy {
     if(actor instanceof Bullet) {
       this.hitPoint -= 1;
     }
+    if(actor instanceof BlackHole) {
+      this.hitPoint = 0;
+    }
+    
     if(!this.hitPoint) {
       this.isExpired = true;
       EntityManager.getInstance().createExplosion(toVector2(this.position), 20);

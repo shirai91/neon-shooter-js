@@ -185,10 +185,8 @@ export class EntityManager {
     });
   }
 
-  getEnemiesCount(type: string) {
-    return this.enemies.filter(enemy => {
-      return enemy.constructor.name === type
-    }).length;
+  getEnemiesCount() {
+    return this.enemies.length;
   }
 
   getBlackholeCount(){
