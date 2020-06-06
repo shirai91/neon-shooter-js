@@ -7,9 +7,9 @@ import { toVector3 } from "~core/utils";
 import { EntityManager } from "~core/EntityManager";
 
 const VELOCITY = 200;
-const EXPIRE_TIME = 2;
+const EXPIRE_TIME = 3;
 
-export class Bullet extends GameObject {
+export class PartialEffect extends GameObject {
   remainingLifeTime = EXPIRE_TIME;
   radius = 7;
   /**
@@ -33,16 +33,12 @@ export class Bullet extends GameObject {
     this.canExpire = false;
   }
 
-  getHit(actor: GameObject) {
-    this.isExpired = true;
-  }
-
   loadTexture(scene: Scene) {
     this.setScale(7, 3);
-    const bulletTexture = ContentManager.getInstance().getAsset(
-      ASSETS.BULLET.name
+    const laserTexture = ContentManager.getInstance().getAsset(
+      ASSETS.LASER.name
     );
-    this.setImage(bulletTexture);
+    this.setImage(laserTexture);
   }
 
   updateExpireTime(delta: number) {

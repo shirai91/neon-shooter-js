@@ -110,6 +110,10 @@ export class GameEngine {
     this.gameRoot.init();
   }
 
+  getGameRoot(){
+    return this.gameRoot;
+  }
+
   update() {
     this.renderer.setClearColor(0x000000, 1);
     requestAnimationFrame(() => {

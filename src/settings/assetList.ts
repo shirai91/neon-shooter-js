@@ -18,5 +18,9 @@ export const ASSETS = {
   BLACK_HOLE: {
     name: "BlackHole",
     path: "assets/BlackHole.png"
+  },
+  LASER: {
+    name: "Laser",
+    path: 'assets/Laser.png'
   }
 };

@@ -10,8 +10,10 @@ import { Bullet } from "./Bullet";
 import * as THREE from "three";
 
 const AREA_OF_EFFECT = 50;
+const MAX_HP = 10;
 
 export class BlackHole extends GameObject {
+  hitPoint = MAX_HP;
   constructor(position: Vector2) {
     super();
     this.position.set(position.x, position.y, 0);
@@ -29,6 +31,19 @@ export class BlackHole extends GameObject {
       ASSETS.BLACK_HOLE.name
     );
     this.setImage(blackHoleTexture);
+  }
+
+  getHit(actor: GameObject) {
+    //Damage calculation phase
+    if(actor instanceof Bullet) {
+      this.hitPoint -= 1;
+    }
+
+    // Death calculation phase
+    if(!this.hitPoint) {
+      this.isExpired = true;
+      EntityManager.getInstance().createExplosion(toVector2(this.position), 20);
+    }
   }
 
   update() {

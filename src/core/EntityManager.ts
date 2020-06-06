@@ -1,12 +1,13 @@
 import { GameObject } from "./GameObject";
 import { GameManager } from "./GameManager";
-import { isColliding, toVector2 } from "./utils";
+import { isColliding, toVector2,getRandomInt } from "./utils";
 import { Wanderer } from "~objects/Wanderer";
 import { Ship } from "~objects/Ship";
 import { Bullet } from "~objects/Bullet";
 import { Enemy } from "~objects/Enemy";
 import { Vector2 } from "three";
 import { BlackHole } from "~objects/BlackHole";
+import { PartialEffect } from "~objects/PartialEffect";
 
 export class EntityManager {
   private static instance: EntityManager;
@@ -15,7 +16,8 @@ export class EntityManager {
   private enemies: Enemy[] = [];
   private bullets: Bullet[] = [];
   private blackHoles: BlackHole[] = [];
-  private constructor() { }
+  private partialEffects: PartialEffect[] = [];
+  private constructor() {}
   static getInstance() {
     if (!EntityManager.instance) {
       EntityManager.instance = new EntityManager();
@@ -56,6 +58,18 @@ export class EntityManager {
         this.remove(object);
       });
     this.enemies = this.enemies.filter(object => !object.isExpired);
+
+  }
+
+  destroyAll() {
+    this.blackHoles.forEach((blackhole) => {
+      this.createExplosion(toVector2(blackhole.position), 20);
+      blackhole.isExpired = true;
+    })
+    this.enemies.forEach((enemy) => {
+      this.createExplosion(toVector2(enemy.position), 20);
+      enemy.isExpired = true;
+    })
   }
 
   handleCollisionForBlackhole() {
@@ -89,6 +103,7 @@ export class EntityManager {
     }
   }
 
+
   handleCollisionBetweenBulletAndEnemy() {
     for (
       let bulletIndex = 0;
@@ -97,8 +112,8 @@ export class EntityManager {
     ) {
       for (let enemyIndex = 0; enemyIndex < this.enemies.length; enemyIndex++) {
         if (isColliding(this.bullets[bulletIndex], this.enemies[enemyIndex])) {
-          this.bullets[bulletIndex].isExpired = true;
-          this.enemies[enemyIndex].isExpired = true;
+          this.enemies[enemyIndex].getHit(this.bullets[bulletIndex]);
+          this.bullets[enemyIndex].getHit(this.enemies[bulletIndex]);
         }
       }
     }
@@ -114,10 +129,46 @@ export class EntityManager {
     }
   }
 
+  handleCollisionBetweenPlayerAndBlackHole() {
+    for (let i = 0; i < this.blackHoles.length; i++) {
+      if (isColliding(this.blackHoles[i], this.player)) {
+        (<Ship>this.player).getHit();
+      }
+    }
+  }
+
+
+  handleCollisionBetweenBulletAndBlackhole() {
+    for (
+      let bulletIndex = 0;
+      bulletIndex < this.bullets.length;
+      bulletIndex++
+    ) {
+      for (let enemyIndex = 0; enemyIndex < this.blackHoles.length; enemyIndex++) {
+        if (isColliding(this.bullets[bulletIndex], this.blackHoles[enemyIndex])) {
+          this.blackHoles[enemyIndex].getHit(this.bullets[bulletIndex]);
+          this.bullets[bulletIndex].getHit(this.blackHoles[enemyIndex]);
+        }
+      }
+    }
+  }
+
+  createExplosion(location: Vector2, count: number){
+    for (let index = 0; index < count; index++) {
+      const rad = index*(2*Math.PI/count);
+      const direction = new Vector2(Math.cos(rad), Math.sin(rad));
+      const partial = new PartialEffect(location, direction);
+      EntityManager.getInstance().add(partial);
+      partial.init();
+    }
+  }
+
   handleCollisions() {
     this.handleCollisionBetweenEnemyAndEnemy();
     this.handleCollisionBetweenPlayerAndEnemy();
+    this.handleCollisionBetweenPlayerAndBlackHole();
     this.handleCollisionBetweenBulletAndEnemy();
+    this.handleCollisionBetweenBulletAndBlackhole();
     this.handleCollisionForBlackhole();
   }
 
@@ -132,6 +183,16 @@ export class EntityManager {
         return true;
       }
     });
+  }
+
+  getEnemiesCount(type: string) {
+    return this.enemies.filter(enemy => {
+      return enemy.constructor.name === type
+    }).length;
+  }
+
+  getBlackholeCount(){
+    return this.blackHoles.length;
   }
 
   update(delta: number) {
