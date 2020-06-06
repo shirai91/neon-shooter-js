@@ -129,6 +129,28 @@ export class Ship extends GameObject {
     const bullet = new Bullet(bulletPosition, bulletDirection);
     bullet.init();
     EntityManager.getInstance().add(bullet);
+
+    const bullet2Angle = bulletDirection.clone().angle() - Math.PI / 60;
+    const bullet2Direction = new Vector2(Math.cos(bullet2Angle), Math.sin(bullet2Angle));
+
+    const bullet2Position = toVector2(this.position);
+    bullet2Position.add(
+      new Vector2(bullet2Direction.x * 8, bullet2Direction.y * 8)
+    );
+    const bullet2 = new Bullet(bullet2Position, bullet2Direction);
+    bullet2.init();
+    EntityManager.getInstance().add(bullet2);
+
+    const bullet3Angle = bulletDirection.clone().angle() + Math.PI / 60;
+    const bullet3Direction = new Vector2(Math.cos(bullet3Angle), Math.sin(bullet3Angle));
+
+    const bullet3Position = toVector2(this.position);
+    bullet3Position.add(
+      new Vector2(bullet3Direction.x * 8, bullet3Direction.y * 8)
+    );
+    const bullet3 = new Bullet(bullet3Position, bullet3Direction);
+    bullet3.init();
+    EntityManager.getInstance().add(bullet3);
   }
 
   fireBullet(delta) {
