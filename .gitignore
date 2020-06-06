@@ -3,5 +3,6 @@ node_modules
 .cache
 
 app/src.*
+app/index.html
 app/index.js
 app/index.js.*

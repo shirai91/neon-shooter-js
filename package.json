@@ -1,5 +1,6 @@
 {
   "name": "neon-shooter-js",
+  "homepage": "homepage”: “http://shirai91.github.io/neon-shooter-js",
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
@@ -11,6 +12,7 @@
     "typescript": "^3.6.4"
   },
   "scripts": {
-    "start": "parcel src/index.html --out-dir app/ -p 6868 "
+    "start": "parcel src/index.html --out-dir app/ -p 6868 ",
+    "build": "parcel build src/index.html --out-dir app/"
   }
 }
