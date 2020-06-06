@@ -41,6 +41,7 @@ export class Ship extends GameObject {
     if(this.isActive===true) {
       this.isActive=false;
       GameSubscription.emit("gameover");
+      EntityManager.getInstance().createExplosion(toVector2(this.position), 200);
     }
   }
 

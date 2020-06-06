@@ -64,6 +64,7 @@ export class BlackHole extends GameObject {
           .sub(toVector2(this.position))
           .multiplyScalar(0.3);
         entity.velocity.add(velocityAdjustment);
+        return;
       } else {
         const directionPosition = toVector2(this.position).sub(
           toVector2(entity.position)

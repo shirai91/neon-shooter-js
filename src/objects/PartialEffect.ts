@@ -3,14 +3,11 @@ import { GameManager } from "~core/GameManager";
 import { Scene, Vector2, Color } from "three";
 import { ContentManager } from "~core/ContentManager";
 import { ASSETS } from "~settings/assetList";
-import { toVector3, getRandomFloat, HSVToColor } from "~core/utils";
+import { toVector3, getRandomFloat, HSVToColor, getRandomInt } from "~core/utils";
 import { EntityManager } from "~core/EntityManager";
 
-const VELOCITY = 200;
-const EXPIRE_TIME = 3;
-
 export class PartialEffect extends GameObject {
-  remainingLifeTime = EXPIRE_TIME;
+  remainingLifeTime = 1;
   baseColor: Color;
   radius = 5;
   /**
@@ -22,7 +19,8 @@ export class PartialEffect extends GameObject {
     super();
     this.canExpire = true;
     this.position = toVector3(position);
-    this.velocity.set(direction.x * VELOCITY, direction.y * VELOCITY);
+    const velocity = getRandomInt(50, 150)
+    this.velocity.set(direction.x * velocity, direction.y * velocity);
     this.baseColor = color;
   }
 
@@ -36,7 +34,8 @@ export class PartialEffect extends GameObject {
   }
 
   loadTexture(scene: Scene) {
-    this.setScale(6, 1.5);
+    const height = getRandomFloat(1,6);
+    this.setScale(height, 1.5);
     const laserTexture = ContentManager.getInstance().getAsset(
       ASSETS.LASER.name
     );

@@ -62,11 +62,11 @@ export class EntityManager {
 
   destroyAll() {
     this.blackHoles.forEach((blackhole) => {
-      this.createExplosion(toVector2(blackhole.position), 20);
+      this.createExplosion(toVector2(blackhole.position), 60);
       blackhole.isExpired = true;
     })
     this.enemies.forEach((enemy) => {
-      this.createExplosion(toVector2(enemy.position), 20);
+      this.createExplosion(toVector2(enemy.position), 60);
       enemy.isExpired = true;
     })
   }
