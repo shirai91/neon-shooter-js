@@ -156,7 +156,9 @@ export class Ship extends GameObject {
 
     this.fireBullet(delta);
 
+    this.force.divideScalar(1.5);
     this.velocity = this.getMovementDirection().multiplyScalar(SHIP_SPEED).sub(this.force);
+
 
     if (this.velocity.lengthSq() > 0) {
       this.orientation = this.velocity.angle();

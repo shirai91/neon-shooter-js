@@ -76,7 +76,7 @@ export class BlackHole extends GameObject {
       if (entity instanceof Ship) {
         const velocityAdjustment = toVector2(entity.position)
           .sub(toVector2(this.position))
-          .multiplyScalar(0.3);
+          .multiplyScalar(0.6);
         entity.force.add(velocityAdjustment);
         return;
       }
