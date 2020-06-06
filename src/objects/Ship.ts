@@ -27,6 +27,7 @@ export class Ship extends GameObject {
   bulletPerShot = 1;
   raycaster = new Raycaster();
   isActive = true;
+  force: Vector2 = new Vector2(0, 0);
 
   init() {
     const scene = GameManager.getInstance().getScene();
@@ -38,8 +39,8 @@ export class Ship extends GameObject {
   }
 
   getHit() {
-    if(this.isActive===true) {
-      this.isActive=false;
+    if (this.isActive === true) {
+      this.isActive = false;
       GameSubscription.emit("gameover");
       EntityManager.getInstance().createExplosion(toVector2(this.position), 200);
     }
@@ -63,14 +64,14 @@ export class Ship extends GameObject {
     const x =
       ((event.clientX - canvasBounds.left) /
         (canvasBounds.right - canvasBounds.left)) *
-        2 -
+      2 -
       1;
     const y =
       -(
         (event.clientY - canvasBounds.top) /
         (canvasBounds.bottom - canvasBounds.top)
       ) *
-        2 +
+      2 +
       1;
     InputManager.getInstance().setMousePosition(new Vector2(x, y));
   };
@@ -148,14 +149,14 @@ export class Ship extends GameObject {
   }
 
   update(delta: number) {
-    if(!this.isActive){
+    if (!this.isActive) {
       return;
     }
     this.updateMouseAim();
 
     this.fireBullet(delta);
 
-    this.velocity = this.getMovementDirection().multiplyScalar(SHIP_SPEED);
+    this.velocity = this.getMovementDirection().multiplyScalar(SHIP_SPEED).sub(this.force);
 
     if (this.velocity.lengthSq() > 0) {
       this.orientation = this.velocity.angle();
@@ -169,7 +170,7 @@ export class Ship extends GameObject {
   }
 
   draw() {
-    if(!this.isActive) {
+    if (!this.isActive) {
       this.mesh.visible = false;
       return;
     }

@@ -16,7 +16,7 @@ export class PartialEffect extends GameObject {
    * @param position
    * @param direction a normalized Vector2,
    */
-  constructor(position: Vector2, direction: Vector2, color: Color, lifeTime = 1) {
+  constructor(position: Vector2, direction: Vector2, color: Color, lifeTime = 0.9) {
     super();
     this.canExpire = true;
     this.position = toVector3(position);

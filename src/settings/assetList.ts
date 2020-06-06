@@ -22,5 +22,9 @@ export const ASSETS = {
   LASER: {
     name: "Laser",
     path: 'assets/Laser.png'
+  },
+  SPACE: {
+    name: "Space",
+    path: "assets/space.png"
   }
 };

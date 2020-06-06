@@ -9,6 +9,7 @@ import { Enemy } from "./Enemy";
 import { Bullet } from "./Bullet";
 import * as THREE from "three";
 import { PartialEffect } from "./PartialEffect";
+import { Ship } from "./Ship";
 
 const AREA_OF_EFFECT = 50;
 const MAX_HP = 10;
@@ -71,6 +72,15 @@ export class BlackHole extends GameObject {
         entity.velocity.add(velocityAdjustment);
         return;
       }
+
+      if (entity instanceof Ship) {
+        const velocityAdjustment = toVector2(entity.position)
+          .sub(toVector2(this.position))
+          .multiplyScalar(0.3);
+        entity.force.add(velocityAdjustment);
+        return;
+      }
+
 
       if (entity instanceof PartialEffect) {
         if ((<PartialEffect>entity).ignoreGravity) {

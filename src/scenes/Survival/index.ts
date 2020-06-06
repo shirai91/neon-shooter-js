@@ -13,8 +13,8 @@ import { AudioManager } from "~core/AudioManager";
 type GameStates = "playing" | "menu";
 const MOB_SPAWN_TIME = 1;
 const BLACKHOLE_SPAWN_TIME = 3;
-const MAX_MOBS = 10;
-const MAX_BLACKHOLE = 3;
+const MAX_MOBS = 20;
+const MAX_BLACKHOLE = 8;
 const NO_SPAWN_TIME = 8;
 
 export default class Survival extends GameObject {
