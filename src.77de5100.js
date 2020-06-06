@@ -38828,7 +38828,7 @@ var ASSETS = {
   },
   SEEKER: {
     name: "Seeker",
-    path: "assets/seeker.png"
+    path: "assets/Seeker.png"
   },
   BLACK_HOLE: {
     name: "BlackHole",
@@ -39672,7 +39672,7 @@ function (_super) {
     } // Death calculation phase
 
 
-    if (!this.hitPoint) {
+    if (this.hitPoint <= 0) {
       this.isExpired = true;
 
       _EntityManager.EntityManager.getInstance().createExplosion((0, _utils.toVector2)(this.position), 80);
@@ -39844,6 +39844,22 @@ function () {
       _this.remove(object);
     });
     this.enemies = this.enemies.filter(function (object) {
+      return !object.isExpired;
+    });
+    this.blackHoles.filter(function (object) {
+      return object.isExpired;
+    }).forEach(function (object) {
+      _this.remove(object);
+    });
+    this.blackHoles = this.blackHoles.filter(function (object) {
+      return !object.isExpired;
+    });
+    this.partialEffects.filter(function (object) {
+      return object.isExpired;
+    }).forEach(function (object) {
+      _this.remove(object);
+    });
+    this.partialEffects = this.partialEffects.filter(function (object) {
       return !object.isExpired;
     });
   };
@@ -40387,7 +40403,7 @@ function (_super) {
       this.hitPoint = 0;
     }
 
-    if (!this.hitPoint) {
+    if (this.hitPoint <= 0) {
       this.isExpired = true;
 
       _EntityManager.EntityManager.getInstance().createExplosion((0, _utils.toVector2)(this.position), 60);
@@ -40581,7 +40597,7 @@ function (_super) {
       this.hitPoint = 0;
     }
 
-    if (!this.hitPoint) {
+    if (this.hitPoint <= 0) {
       this.isExpired = true;
 
       _EntityManager.EntityManager.getInstance().createExplosion((0, _utils.toVector2)(this.position), 60);
@@ -41151,7 +41167,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "59860" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57268" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
