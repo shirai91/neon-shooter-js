@@ -13,6 +13,6 @@
   },
   "scripts": {
     "start": "parcel src/index.html --out-dir app/ -p 6868 ",
-    "build": "parcel build src/index.html --out-dir app/ --public-url ~/neon-shooter-js/"
+    "build": "parcel build src/index.html --out-dir app/ --public-url \"~/neon-shooter-js/\""
   }
 }
