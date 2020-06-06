@@ -3,6 +3,7 @@ import { ContentManager } from "./core/ContentManager";
 import { ASSETS } from "./settings/assetList";
 import TestScene from "./scenes/TestScene";
 import Survival from "./scenes/Survival";
+import { AudioManager } from "~core/AudioManager";
 
 async function initGameEngine() {
   const rootNode = document.getElementById("container");
@@ -12,7 +13,7 @@ async function initGameEngine() {
   }
   // TODO: next time we need to move content loader to another class
 
-  for(let key in ASSETS) {
+  for (let key in ASSETS) {
     await ContentManager.getInstance().loadContent(
       ASSETS[key].name,
       ASSETS[key].path

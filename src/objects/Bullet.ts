@@ -6,7 +6,7 @@ import { ASSETS } from "~settings/assetList";
 import { toVector3 } from "~core/utils";
 import { EntityManager } from "~core/EntityManager";
 
-const VELOCITY = 200;
+const VELOCITY = 250;
 const EXPIRE_TIME = 2;
 
 export class Bullet extends GameObject {

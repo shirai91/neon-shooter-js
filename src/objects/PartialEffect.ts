@@ -10,18 +10,20 @@ export class PartialEffect extends GameObject {
   remainingLifeTime = 1;
   baseColor: Color;
   radius = 5;
+  ignoreGravity = false;
   /**
    *
    * @param position
    * @param direction a normalized Vector2,
    */
-  constructor(position: Vector2, direction: Vector2, color: Color) {
+  constructor(position: Vector2, direction: Vector2, color: Color, lifeTime = 1) {
     super();
     this.canExpire = true;
     this.position = toVector3(position);
     const velocity = getRandomInt(50, 150)
     this.velocity.set(direction.x * velocity, direction.y * velocity);
     this.baseColor = color;
+    this.remainingLifeTime = lifeTime;
   }
 
   init() {
@@ -34,13 +36,13 @@ export class PartialEffect extends GameObject {
   }
 
   loadTexture(scene: Scene) {
-    const height = getRandomFloat(1,6);
+    const height = getRandomFloat(1, 6);
     this.setScale(height, 1.5);
     const laserTexture = ContentManager.getInstance().getAsset(
       ASSETS.LASER.name
     );
     this.setImage(laserTexture);
-    const hue2 = getRandomFloat(0,2)/6;
+    const hue2 = getRandomFloat(0, 2) / 6;
     const color2 = HSVToColor(hue2, 0.5, 1);
     const color = color2.lerp(this.baseColor, Math.random());
     this.setHexColor(color.getHex());

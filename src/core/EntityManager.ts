@@ -1,6 +1,6 @@
 import { GameObject } from "./GameObject";
 import { GameManager } from "./GameManager";
-import { isColliding, toVector2,getRandomInt, getRandomColor } from "./utils";
+import { isColliding, toVector2, getRandomInt, getRandomColor } from "./utils";
 import { Wanderer } from "~objects/Wanderer";
 import { Ship } from "~objects/Ship";
 import { Bullet } from "~objects/Bullet";
@@ -17,7 +17,7 @@ export class EntityManager {
   private bullets: Bullet[] = [];
   private blackHoles: BlackHole[] = [];
   private partialEffects: PartialEffect[] = [];
-  private constructor() {}
+  private constructor() { }
   static getInstance() {
     if (!EntityManager.instance) {
       EntityManager.instance = new EntityManager();
@@ -151,14 +151,15 @@ export class EntityManager {
     }
   }
 
-  createExplosion(location: Vector2, count: number){
+  createExplosion(location: Vector2, count: number, isIgnoreGravity = false) {
     const COLORS = ["#32a852", "#a83632", "#6600ff", "#0040ff"]
-    const randColor = COLORS[getRandomInt(0,4)];
+    const randColor = COLORS[getRandomInt(0, 4)];
     const baseColor = new Color(randColor)
     for (let index = 0; index < count; index++) {
-      const rad = index*(2*Math.PI/count);
+      const rad = index * (2 * Math.PI / count);
       const direction = new Vector2(Math.cos(rad), Math.sin(rad));
       const partial = new PartialEffect(location, direction, baseColor);
+      partial.ignoreGravity = isIgnoreGravity;
       EntityManager.getInstance().add(partial);
       partial.init();
     }
@@ -190,7 +191,7 @@ export class EntityManager {
     return this.enemies.length;
   }
 
-  getBlackholeCount(){
+  getBlackholeCount() {
     return this.blackHoles.length;
   }
 

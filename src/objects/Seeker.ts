@@ -49,15 +49,16 @@ export class Seeker extends Enemy {
   }
 
   getHit(actor: GameObject) {
-    if(actor instanceof Bullet) {
+    if (actor instanceof Bullet) {
       this.hitPoint -= 1;
+      EntityManager.getInstance().createExplosion(toVector2(this.position), 20);
     }
 
-    if(actor instanceof BlackHole) {
+    if (actor instanceof BlackHole) {
       this.hitPoint = 0;
     }
 
-    if(!this.hitPoint) {
+    if (!this.hitPoint) {
       this.isExpired = true;
       EntityManager.getInstance().createExplosion(toVector2(this.position), 60);
     }
