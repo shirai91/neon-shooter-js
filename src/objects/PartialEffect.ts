@@ -1,9 +1,9 @@
 import { GameObject } from "~core/GameObject";
 import { GameManager } from "~core/GameManager";
-import { Scene, Vector2 } from "three";
+import { Scene, Vector2, Color } from "three";
 import { ContentManager } from "~core/ContentManager";
 import { ASSETS } from "~settings/assetList";
-import { toVector3 } from "~core/utils";
+import { toVector3, getRandomFloat, HSVToColor } from "~core/utils";
 import { EntityManager } from "~core/EntityManager";
 
 const VELOCITY = 200;
@@ -11,17 +11,19 @@ const EXPIRE_TIME = 3;
 
 export class PartialEffect extends GameObject {
   remainingLifeTime = EXPIRE_TIME;
+  baseColor: Color;
   radius = 5;
   /**
    *
    * @param position
    * @param direction a normalized Vector2,
    */
-  constructor(position: Vector2, direction: Vector2) {
+  constructor(position: Vector2, direction: Vector2, color: Color) {
     super();
     this.canExpire = true;
     this.position = toVector3(position);
     this.velocity.set(direction.x * VELOCITY, direction.y * VELOCITY);
+    this.baseColor = color;
   }
 
   init() {
@@ -39,7 +41,10 @@ export class PartialEffect extends GameObject {
       ASSETS.LASER.name
     );
     this.setImage(laserTexture);
-    this.setHexColor(Math.random() * 0xffffff);
+    const hue2 = getRandomFloat(0,2)/6;
+    const color2 = HSVToColor(hue2, 0.5, 1);
+    const color = color2.lerp(this.baseColor, Math.random());
+    this.setHexColor(color.getHex());
   }
 
   updateExpireTime(delta: number) {

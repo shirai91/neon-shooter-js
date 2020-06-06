@@ -1,11 +1,11 @@
 import { GameObject } from "./GameObject";
 import { GameManager } from "./GameManager";
-import { isColliding, toVector2,getRandomInt } from "./utils";
+import { isColliding, toVector2,getRandomInt, getRandomColor } from "./utils";
 import { Wanderer } from "~objects/Wanderer";
 import { Ship } from "~objects/Ship";
 import { Bullet } from "~objects/Bullet";
 import { Enemy } from "~objects/Enemy";
-import { Vector2 } from "three";
+import { Vector2, Color } from "three";
 import { BlackHole } from "~objects/BlackHole";
 import { PartialEffect } from "~objects/PartialEffect";
 
@@ -58,7 +58,6 @@ export class EntityManager {
         this.remove(object);
       });
     this.enemies = this.enemies.filter(object => !object.isExpired);
-
   }
 
   destroyAll() {
@@ -102,7 +101,6 @@ export class EntityManager {
       }
     }
   }
-
 
   handleCollisionBetweenBulletAndEnemy() {
     for (
@@ -154,10 +152,13 @@ export class EntityManager {
   }
 
   createExplosion(location: Vector2, count: number){
+    const COLORS = ["#32a852", "#a83632", "#6600ff", "#0040ff"]
+    const randColor = COLORS[getRandomInt(0,4)];
+    const baseColor = new Color(randColor)
     for (let index = 0; index < count; index++) {
       const rad = index*(2*Math.PI/count);
       const direction = new Vector2(Math.cos(rad), Math.sin(rad));
-      const partial = new PartialEffect(location, direction);
+      const partial = new PartialEffect(location, direction, baseColor);
       EntityManager.getInstance().add(partial);
       partial.init();
     }
