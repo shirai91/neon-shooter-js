@@ -56,7 +56,7 @@ export class Wanderer extends Enemy {
       this.hitPoint = 0;
     }
 
-    if (!this.hitPoint) {
+    if (this.hitPoint <= 0) {
       this.isExpired = true;
       EntityManager.getInstance().createExplosion(toVector2(this.position), 60);
     }

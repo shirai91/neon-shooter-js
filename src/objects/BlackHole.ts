@@ -46,7 +46,7 @@ export class BlackHole extends GameObject {
     }
 
     // Death calculation phase
-    if (!this.hitPoint) {
+    if (this.hitPoint <= 0) {
       this.isExpired = true;
       EntityManager.getInstance().createExplosion(toVector2(this.position), 80);
     }

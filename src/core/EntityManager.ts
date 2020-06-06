@@ -58,6 +58,22 @@ export class EntityManager {
         this.remove(object);
       });
     this.enemies = this.enemies.filter(object => !object.isExpired);
+
+    this.blackHoles
+      .filter(object => object.isExpired)
+      .forEach(object => {
+        this.remove(object);
+      });
+
+    this.blackHoles = this.blackHoles.filter(object => !object.isExpired);
+
+    this.partialEffects
+      .filter(object => object.isExpired)
+      .forEach(object => {
+        this.remove(object);
+      });
+
+    this.partialEffects = this.partialEffects.filter(object => !object.isExpired);
   }
 
   destroyAll() {
