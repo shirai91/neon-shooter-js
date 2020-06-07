@@ -13,10 +13,18 @@ export const ASSETS = {
   },
   SEEKER: {
     name: "Seeker",
-    path: "assets/seeker.png"
+    path: "assets/Seeker.png"
   },
   BLACK_HOLE: {
     name: "BlackHole",
     path: "assets/BlackHole.png"
+  },
+  LASER: {
+    name: "Laser",
+    path: 'assets/Laser.png'
+  },
+  SPACE: {
+    name: "Space",
+    path: "assets/space.png"
   }
 };

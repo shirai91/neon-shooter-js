@@ -38,7 +38,7 @@ export class GameEngine {
 
     this.initComposer(domElement);
 
-    this.initGui();
+    // this.initGui();
 
     GameManager.getInstance().setScene(this.scene);
     GameManager.getInstance().setCamera(this.camera);
@@ -108,6 +108,10 @@ export class GameEngine {
   setEntry(gameObject: GameObject) {
     this.gameRoot = gameObject;
     this.gameRoot.init();
+  }
+
+  getGameRoot() {
+    return this.gameRoot;
   }
 
   update() {

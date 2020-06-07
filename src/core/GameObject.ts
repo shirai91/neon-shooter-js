@@ -31,7 +31,8 @@ export abstract class GameObject {
   }
 
   setScale(width, height) {
-    this.geometry.scale(width, height, 0);
+    // 0.0001 is for THREE.js bug, it will throw warning if set scale = 0
+    this.geometry.scale(width, height, 0.0001);
   }
 
   setImage(texture: Texture) {
@@ -39,9 +40,13 @@ export abstract class GameObject {
     (<MeshBasicMaterial>this.mesh.material).needsUpdate = true;
   }
 
-  init(): void {}
+  setHexColor(hexColor: number) {
+    (<MeshBasicMaterial>this.mesh.material).color.setHex(hexColor)
+  }
 
-  update(delta: number): void {}
+  init(): void { }
 
-  draw(): void {}
+  update(delta: number): void { }
+
+  draw(): void { }
 }

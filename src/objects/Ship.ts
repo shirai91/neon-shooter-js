@@ -7,12 +7,15 @@ import { InputManager } from "~core/InputManager";
 import { Vector2, Vector3, Scene, Raycaster } from "three";
 import { Bullet } from "./Bullet";
 import { EntityManager } from "~core/EntityManager";
+import Survival from "~scenes/Survival";
+import { GameEngine } from "~core/GameEngine";
+import { GameSubscription } from "~core/GameSubscriptions";
 
 const CONTROL_KEYS = {
-  UP: 38,
-  DOWN: 40,
-  LEFT: 37,
-  RIGHT: 39
+  UP: 87,
+  DOWN: 83,
+  LEFT: 65,
+  RIGHT: 68,
 };
 
 const SHIP_SPEED = 100;
@@ -24,6 +27,7 @@ export class Ship extends GameObject {
   bulletPerShot = 1;
   raycaster = new Raycaster();
   isActive = true;
+  force: Vector2 = new Vector2(0, 0);
 
   init() {
     const scene = GameManager.getInstance().getScene();
@@ -35,7 +39,11 @@ export class Ship extends GameObject {
   }
 
   getHit() {
-    console.log("DEBUG: YOU GOT HIT, GAME IS OVER");
+    if (this.isActive === true) {
+      this.isActive = false;
+      GameSubscription.emit("gameover");
+      EntityManager.getInstance().createExplosion(toVector2(this.position), 200);
+    }
   }
 
   handleKeyDown = (event: KeyboardEvent) => {
@@ -56,14 +64,14 @@ export class Ship extends GameObject {
     const x =
       ((event.clientX - canvasBounds.left) /
         (canvasBounds.right - canvasBounds.left)) *
-        2 -
+      2 -
       1;
     const y =
       -(
         (event.clientY - canvasBounds.top) /
         (canvasBounds.bottom - canvasBounds.top)
       ) *
-        2 +
+      2 +
       1;
     InputManager.getInstance().setMousePosition(new Vector2(x, y));
   };
@@ -121,6 +129,28 @@ export class Ship extends GameObject {
     const bullet = new Bullet(bulletPosition, bulletDirection);
     bullet.init();
     EntityManager.getInstance().add(bullet);
+
+    const bullet2Angle = bulletDirection.clone().angle() - Math.PI / 60;
+    const bullet2Direction = new Vector2(Math.cos(bullet2Angle), Math.sin(bullet2Angle));
+
+    const bullet2Position = toVector2(this.position);
+    bullet2Position.add(
+      new Vector2(bullet2Direction.x * 8, bullet2Direction.y * 8)
+    );
+    const bullet2 = new Bullet(bullet2Position, bullet2Direction);
+    bullet2.init();
+    EntityManager.getInstance().add(bullet2);
+
+    const bullet3Angle = bulletDirection.clone().angle() + Math.PI / 60;
+    const bullet3Direction = new Vector2(Math.cos(bullet3Angle), Math.sin(bullet3Angle));
+
+    const bullet3Position = toVector2(this.position);
+    bullet3Position.add(
+      new Vector2(bullet3Direction.x * 8, bullet3Direction.y * 8)
+    );
+    const bullet3 = new Bullet(bullet3Position, bullet3Direction);
+    bullet3.init();
+    EntityManager.getInstance().add(bullet3);
   }
 
   fireBullet(delta) {
@@ -141,11 +171,16 @@ export class Ship extends GameObject {
   }
 
   update(delta: number) {
+    if (!this.isActive) {
+      return;
+    }
     this.updateMouseAim();
 
     this.fireBullet(delta);
 
-    this.velocity = this.getMovementDirection().multiplyScalar(SHIP_SPEED);
+    this.force.divideScalar(1.5);
+    this.velocity = this.getMovementDirection().multiplyScalar(SHIP_SPEED).sub(this.force);
+
 
     if (this.velocity.lengthSq() > 0) {
       this.orientation = this.velocity.angle();
@@ -159,6 +194,10 @@ export class Ship extends GameObject {
   }
 
   draw() {
+    if (!this.isActive) {
+      this.mesh.visible = false;
+      return;
+    }
     this.mesh.position.set(this.position.x, this.position.y, this.position.z);
     this.mesh.rotation.set(0, 0, this.orientation);
   }

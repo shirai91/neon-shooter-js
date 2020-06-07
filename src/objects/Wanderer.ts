@@ -12,10 +12,14 @@ import {
 import { InputManager } from "~core/InputManager";
 import { Vector2, Vector3, Geometry } from "three";
 import { Enemy } from "./Enemy";
+import { Bullet } from "./Bullet";
+import { EntityManager } from "~core/EntityManager";
+import { BlackHole } from "./BlackHole";
 
 const WANDERER_SPEED = 50;
 const ROTATION_VALUE = Math.PI / 40;
 const CHANGE_DIRECTION_THRESHOLD = 0.5;
+const MAX_HP = 3;
 
 export class Wanderer extends Enemy {
   destination: Vector2;
@@ -24,6 +28,7 @@ export class Wanderer extends Enemy {
   isCanChangeDirection = true;
   changeDirectionThresholdRemaining = CHANGE_DIRECTION_THRESHOLD;
   radius = 10;
+  hitPoint = MAX_HP;
 
   constructor(position: Vector2) {
     super();
@@ -43,7 +48,18 @@ export class Wanderer extends Enemy {
   }
 
   getHit(actor: GameObject) {
-    this.isExpired = true;
+    if (actor instanceof Bullet) {
+      this.hitPoint -= 1;
+      EntityManager.getInstance().createExplosion(toVector2(this.position), 20);
+    }
+    if (actor instanceof BlackHole) {
+      this.hitPoint = 0;
+    }
+
+    if (this.hitPoint <= 0) {
+      this.isExpired = true;
+      EntityManager.getInstance().createExplosion(toVector2(this.position), 60);
+    }
   }
 
   initDirectionLine() {

@@ -13,11 +13,14 @@ import { InputManager } from "~core/InputManager";
 import { Vector2, Vector3, Geometry } from "three";
 import { Enemy } from "./Enemy";
 import { EntityManager } from "~core/EntityManager";
+import { Bullet } from "./Bullet";
+import { BlackHole } from "./BlackHole";
 
 const SEEKER_SPEED = 50;
 const ROTATION_VALUE = Math.PI / 40;
 const CHANGE_DIRECTION_THRESHOLD = 0.5;
 const UPDATE_TARGET_THRESHOLD_TIME = 0.5;
+const MAX_HP = 5;
 
 export class Seeker extends Enemy {
   destination: Vector2;
@@ -27,6 +30,7 @@ export class Seeker extends Enemy {
   changeDirectionThresholdRemaining = CHANGE_DIRECTION_THRESHOLD;
   updateTargetTimeRemaininng = UPDATE_TARGET_THRESHOLD_TIME;
   radius = 10;
+  hitPoint = MAX_HP;
 
   constructor(position: Vector2) {
     super();
@@ -45,7 +49,19 @@ export class Seeker extends Enemy {
   }
 
   getHit(actor: GameObject) {
-    this.isExpired = true;
+    if (actor instanceof Bullet) {
+      this.hitPoint -= 1;
+      EntityManager.getInstance().createExplosion(toVector2(this.position), 20);
+    }
+
+    if (actor instanceof BlackHole) {
+      this.hitPoint = 0;
+    }
+
+    if (this.hitPoint <= 0) {
+      this.isExpired = true;
+      EntityManager.getInstance().createExplosion(toVector2(this.position), 60);
+    }
   }
 
   initDirectionLine() {
